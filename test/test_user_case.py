@@ -1,9 +1,9 @@
 """
 UCSF BMI203: Biocomputing Algorithms
-Author:
-Date: 
-Program: 
-Description:
+Author: Cindy Pino-Barrios
+Date: February 28, 2023
+Program: models
+Description: Test the use case of the Hidden Markov Model and Viterbi Algorithm
 """
 import pytest
 import numpy as np
@@ -88,12 +88,53 @@ def test_user_case_one():
 
 
 def test_user_case_two():
-    """_summary_
+    """_summary_ would a humminbird come to the surface to feed? 
+    hypothesis: if the humminbird is in the water, it will not come to the surface to feed
     """
-    # TODO
+    prior_probabilities = np.array([0.5, 0.5])
+    transition_probabilities = np.array([[0.7, 0.3],
+                                            [0.3, 0.7]])
+    emission_probabilities = np.array([[0.9, 0.1],
+                                        [0.2, 0.8]])
+    observation_states = ['no', 'yes']
+    hidden_states = ['water', 'air']
+    decode_observation_states = ['humminbir is in the water', 'humminbird is in the air']
+
+    hmm = HiddenMarkovModel(observation_states = observation_states,
+                            hidden_states = hidden_states,
+                            prior_probabilities = prior_probabilities,
+                            transition_probabilities = transition_probabilities,
+                            emission_probabilities= emission_probabilities)
+    
+    viterbi = ViterbiAlgorithm(hmm)
+    decoded_hidden_states = viterbi.best_hidden_state_sequence(decode_observation_states)
+    assert np.alltrue(decoded_hidden_states == ['water', 'air'])
+
+     
 
 
 def test_user_case_three():
-    """_summary_
+    """_summary_ does the grizzly bear leave hybernation in April or May?
+    hypothesis: the grizzly bear leaves hybernation in May
     """
-    # TODO
+    prior_probabilities = np.array([0.5, 0.5])
+    transition_probabilities = np.array([[0.7, 0.3],
+                                            [0.3, 0.7]])
+    emission_probabilities = np.array([[0.9, 0.1],
+                                        [0.2, 0.8]])
+    observation_states = ['hungry', 'not hungry']
+    hidden_states = ['hybernation', 'awake']
+    decode_observation_states = ['grizzly bear is hungry', 'grizzly bear is not hungry']
+    correct_hidden_states = ['hybernation', 'hybernation','awake','awake']
+
+    hmm = HiddenMarkovModel(observation_states = observation_states,
+                            hidden_states = hidden_states,
+                            prior_probabilities = prior_probabilities,
+                            transition_probabilities = transition_probabilities,
+                            emission_probabilities= emission_probabilities)
+    
+    viterbi = ViterbiAlgorithm(hmm)
+    decoded_hidden_states = viterbi.best_hidden_state_sequence(decode_observation_states)
+    assert np.alltrue(decoded_hidden_states == correct_hidden_states)
+
+    
